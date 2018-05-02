@@ -103,4 +103,5 @@ for i_train in range(n_train):
         batch = memory
         
     model.train(batch)
-    model.save()
+    if i_train %10==0
+        model.save()
