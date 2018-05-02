@@ -1,8 +1,5 @@
 from snake_env import SnakeEnv
 import numpy as np
-from dicts import int2tuple, tuple2int
-from initialize import initialize_graph
-from actions import get_action, get_current_direction
 
 from DQNetwork import DQNetwork
 

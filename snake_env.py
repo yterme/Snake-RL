@@ -8,7 +8,7 @@ Created on Mon Apr  9 17:09:16 2018
 
 
 
-import curses
+#import curses
 from random import randint
 import numpy as np
 
@@ -101,6 +101,7 @@ class SnakeEnv:
         return self.grid.copy(), reward, done       
         
     
-    def close(self):
-        if self.render:
-            curses.endwin()
+#    def close(self):
+#        if self.render:
+#            curses.endwin()
+#
