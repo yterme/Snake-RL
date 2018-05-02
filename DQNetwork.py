@@ -137,15 +137,15 @@ class DQNetwork:
         :param filename: file to which save the weights (must end with ".h5")
         """
         f = ('model.h5' if filename is None else filename)
-        if self.logger is not None:
-            self.logger.log('Saving model as %s' % f)
-        self.model.save_weights(self.logger.path + f)
+        #if self.logger is not None:
+        #    self.logger.log('Saving model as %s' % f)
+        self.model.save_weights( f)
 
     def load(self, path):
         """
         Loads the model's weights from path.
         :param path: h5 file from which to load teh weights
         """
-        if self.logger is not None:
-            self.logger.log('Loading weights from file...')
+        #if self.logger is not None:
+        #    self.logger.log('Loading weights from file...')
         self.model.load_weights(path)
