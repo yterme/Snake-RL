@@ -4,39 +4,28 @@ from snake_env import SnakeEnv
 import numpy as np
 from DQNetwork import DQNetwork
 from Results import Results, test
-
+import Options
 import pickle
 
-if len(sys.argv)>4:
-    nrow, ncol = int(sys.argv[4]), int(sys.argv[4])
-else:
-    nrow, ncol = 5,5
+
+opt = Options().parse()
+nrow, ncol = opt.gridsize, opt.gridsize
 model = DQNetwork(4, (1,nrow, ncol))
-env= SnakeEnv(nrow, ncol, colors = 'gray')
-
-
-
-if len(sys.argv)>5:
-    n_train = int(sys.argv[5])
+if opt.n_channels == 1:
+    env= SnakeEnv(nrow, ncol, colors = 'gray')
 else:
-    n_train = 1000
-n_batch = 5000
+    env= SnakeEnv(nrow, ncol, colors = 'rgb')
+    
+n_train = opt.n_train
+n_episodes = opt.n_episodes
 
-
-episode_count = 500
 imax = 100
 res = Results()
 
-loadModel = False
-results_filename = 'results.pkl'
-model_filename = 'model.h5'
+loadModel = opt.load
+results_filename = 'results{}.pkl'.format(opt.name)
+model_filename = 'model{}.h5'.format(opt.name)
 
-print(sys.argv)
-if len(sys.argv)>1:
-    if sys.argv[1]=='load':
-        loadModel = True
-    results_filename = sys.argv[2]
-    model_filename = sys.argv[3]
     
 if loadModel:
     model.load(model_filename)
@@ -48,14 +37,14 @@ else:
     epsilons = np.arange(1,0.1, - 0.9/n_train)
 
 # size of memory
-N = 100000
+N_memory = 50000
 for i_train in range(n_train):
     epsilon = epsilons[i_train]
     res.epsilon = epsilon
     print("Training: round {}, epsilon = {}".format(i_train, round(epsilon,2)))
     lengths_i_train = []
     scores_i_train = []
-    for i_episode in range(episode_count):
+    for i_episode in range(n_episode):
         i=0
         done = False
         grid = env.reset()
@@ -81,7 +70,7 @@ for i_train in range(n_train):
     res.lengths.append(lengths_i_train)
     res.scores.append(scores_i_train)
 
-    res.memory = res.memory[-N:]
+    res.memory = res.memory[-N_memory:]
     #print("Mean length of episode:", np.mean(lengths[i_train]))
     #print("Mean score:", np.mean(scores[i_train]))
     if i_train %10 ==0:
