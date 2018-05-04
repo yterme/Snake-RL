@@ -4,20 +4,23 @@ from snake_env import SnakeEnv
 import numpy as np
 from DQNetwork import DQNetwork
 from Results import Results, test
-import Options
+from Options import Options
 import pickle
 
 
 opt = Options().parse()
 nrow, ncol = opt.gridsize, opt.gridsize
-model = DQNetwork(4, (1,nrow, ncol))
 if opt.n_channels == 1:
     env= SnakeEnv(nrow, ncol, colors = 'gray')
-else:
+elif opt.n_channels==3:
     env= SnakeEnv(nrow, ncol, colors = 'rgb')
     
+n_channels = opt.n_channels
 n_train = opt.n_train
 n_episodes = opt.n_episodes
+n_batch = 5000
+
+model = DQNetwork(4, (n_channels,nrow, ncol))
 
 imax = 100
 res = Results()
@@ -44,11 +47,11 @@ for i_train in range(n_train):
     print("Training: round {}, epsilon = {}".format(i_train, round(epsilon,2)))
     lengths_i_train = []
     scores_i_train = []
-    for i_episode in range(n_episode):
+    for i_episode in range(n_episodes):
         i=0
         done = False
         grid = env.reset()
-        grid= grid.reshape((1,1, env.nrow, env.ncol))
+        grid= grid.reshape((1,n_channels, env.nrow, env.ncol))
         while i <imax:
             i+=1
             source = grid.copy()
@@ -57,7 +60,7 @@ for i_train in range(n_train):
             else:
                 action = np.argmax(model.predict(source))
             grid, reward, done = env.step(action)
-            grid= grid.reshape((1,1, env.nrow, env.ncol))
+            grid= grid.reshape((1,n_channels, env.nrow, env.ncol))
             observation = {'source':source, 'action':action, \
                            'dest':grid, 'reward':reward,'final':done}
             res.memory.append(observation)
@@ -74,7 +77,7 @@ for i_train in range(n_train):
     #print("Mean length of episode:", np.mean(lengths[i_train]))
     #print("Mean score:", np.mean(scores[i_train]))
     if i_train %10 ==0:
-        (l, s) = test(env,model)
+        (l, s) = test(env,model, n_channels)
         print("Test: mean length {}, mean score {}".format(l,s))
         res.lengths_expl.append(l)
         res.scores_expl.append(s)

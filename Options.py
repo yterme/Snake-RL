@@ -31,9 +31,3 @@ class Options():
         args = vars(opt)
         self.opt = opt
         return self.opt
-
-
-a=Options()
-a.parse()
-opt = a.opt
-print(opt.gridsize, opt.name, opt.load, opt.conv)

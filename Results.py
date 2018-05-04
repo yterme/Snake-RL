@@ -17,9 +17,9 @@ class Results():
         self.scores_expl = scores_expl
         self.epsilon = epsilon
         self.memory = memory
-    
+        
 
-def test(env, model, episode_count = 100, imax = 100):
+def test(env, model, n_channels, episode_count = 100, imax = 100):
     lengths = []
     scores = []
     for i_episode in range(episode_count):
@@ -30,7 +30,7 @@ def test(env, model, episode_count = 100, imax = 100):
         epsilon = 0
 
         while i <imax:
-            grid= grid.reshape((1,1, env.nrow, env.ncol))
+            grid= grid.reshape((1,n_channels, env.nrow, env.ncol))
             action = np.argmax(model.predict(grid))
             grid, reward, done = env.step(action)
 

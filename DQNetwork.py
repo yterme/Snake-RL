@@ -61,12 +61,6 @@ class DQNetwork:
             
             self.model.add(Dropout(self.dropout_prob))
             
-            self.model.add(Dense(256))
-            self.model.add(Activation('relu'))
-
-            self.model.add(Dense(128))
-            self.model.add(Activation('relu'))
-            
             self.model.add(Dense(self.actions))
             
             self.optimizer = Adam()
@@ -115,7 +109,7 @@ class DQNetwork:
         h = self.model.fit(x_train.reshape(tuple([len(x_train)]+list(self.input_shape))),
                            t_train,
                            batch_size=32,
-                           nb_epoch=1)
+                           epochs=1)
 
         # Log loss and accuracy
         if self.logger is not None:
