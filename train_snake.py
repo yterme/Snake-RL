@@ -1,5 +1,4 @@
 import sys
-
 from snake_env import SnakeEnv
 import numpy as np
 from DQNetwork import DQNetwork
@@ -10,37 +9,40 @@ import pickle
 
 opt = Options().parse()
 nrow, ncol = opt.gridsize, opt.gridsize
-if opt.n_channels == 1:
+n_channels = opt.n_ch
+
+if n_channels == 1:
     env= SnakeEnv(nrow, ncol, colors = 'gray')
-elif opt.n_channels==3:
+elif n_channels==3:
     env= SnakeEnv(nrow, ncol, colors = 'rgb')
     
-n_channels = opt.n_channels
 n_train = opt.n_train
 n_episodes = opt.n_episodes
-n_batch = 5000
+n_batch = opt.n_batch
+imax = opt.imax
+N_memory = opt.n_memory
 
-model = DQNetwork(4, (n_channels,nrow, ncol))
+model = DQNetwork(4, (n_ch,nrow, ncol))
 
-imax = 100
 res = Results()
 
 loadModel = opt.load
 results_filename = 'results{}.pkl'.format(opt.name)
 model_filename = 'model{}.h5'.format(opt.name)
 
-    
+
 if loadModel:
     model.load(model_filename)
     with open(results_filename, 'rb') as input:
             res = pickle.load(input)
     epsilon = res.epsilon
+    if opt.epsilon<1:
+        epsilon = opt.epsilon
     epsilons = np.maximum(np.arange(epsilon,epsilon -0.9, - 0.9/n_train), 0.1)
 else:
     epsilons = np.arange(1,0.1, - 0.9/n_train)
 
 # size of memory
-N_memory = 50000
 for i_train in range(n_train):
     epsilon = epsilons[i_train]
     res.epsilon = epsilon

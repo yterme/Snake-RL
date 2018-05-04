@@ -20,8 +20,12 @@ class Options():
         self.parser.add_argument('--n_train', type=int, default = 1000, help= 'nb of training rounds')
         self.parser.add_argument('--conv', action = 'store_true', help='if specified, use a CNN ')
         self.parser.add_argument('--load', action='store_true', help= 'if specified, load model')
-        self.parser.add_argument('--n_channels', type = int, default= 1,help='number of channels of the image')
+        self.parser.add_argument('--n_ch', type = int, default= 1,help='number of channels of the image')
         self.parser.add_argument('--n_episodes', type=int, default = 100, help='number of episodes per training round')
+        self.parser.add_argument('--n_batch', type = int, default =5000, help='nb of samples in batch')
+        self.parser.add_argument('--imax', type=int, default=100, help='maximum length of episode')
+        self.parser.add_argument('--n_memory', type=int, default=50000, help='size of memory')
+        self.parser.add_argument('--epsilon', type=float, default=1, help='size of memory')
         self.initialized = True
     
     def parse(self):
