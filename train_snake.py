@@ -22,7 +22,7 @@ n_batch = opt.n_batch
 imax = opt.imax
 N_memory = opt.n_memory
 
-model = DQNetwork(4, (n_ch,nrow, ncol))
+model = DQNetwork(4, (n_channels,nrow, ncol))
 
 res = Results()
 
