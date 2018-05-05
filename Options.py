@@ -26,7 +26,7 @@ class Options():
         self.parser.add_argument('--imax', type=int, default=100, help='maximum length of episode')
         self.parser.add_argument('--n_memory', type=int, default=50000, help='size of memory')
         self.parser.add_argument('--epsilon', type=float, default=1, help='size of memory')
-        self.parser.add_argument('min_epsilon', type=float, default = 0.1, help='minimum value of epsilon')
+        self.parser.add_argument('--min_epsilon', type=float, default = 0.1, help='minimum value of epsilon')
         self.initialized = True
     
     def parse(self):
