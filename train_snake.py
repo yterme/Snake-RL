@@ -5,9 +5,10 @@ from DQNetwork import DQNetwork
 from Results import Results, test
 from Options import Options
 import pickle
-
 import time
+
 opt = Options().parse()
+
 nrow, ncol = opt.gridsize, opt.gridsize
 n_channels = opt.n_ch
 
@@ -23,7 +24,7 @@ imax = opt.imax
 min_epsilon = opt.min_epsilon
 N_memory = opt.n_memory
 
-model = DQNetwork(4, (n_channels,nrow, ncol))
+model = DQNetwork(4, (n_channels,nrow, ncol), conv= opt.conv)
 
 res = Results()
 
