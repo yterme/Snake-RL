@@ -21,10 +21,10 @@ class DQNetwork:
         self.gamma = gamma
         self.alpha = alpha
         self.dropout_prob = dropout_prob
-
+        self.conv = conv
         # Define neural network
         
-        if conv:
+        if self.conv:
             self.model.add(BatchNormalization(axis=1, input_shape=input_shape))
             self.model.add(Convolution2D(32, 2, 2, border_mode='valid',
                                          subsample=(2, 2), dim_ordering='th'))
@@ -56,10 +56,13 @@ class DQNetwork:
             self.model.add(BatchNormalization(axis=1, input_shape=input_shape))
             self.model.add(Flatten())
             
-            self.model.add(Dense(512))
+            self.model.add(Dense(256))
             self.model.add(Activation('relu'))
             
             self.model.add(Dropout(self.dropout_prob))
+            
+            self.model.add(Dense(128))
+            self.model.add(Activation('relu'))
             
             self.model.add(Dense(self.actions))
             
@@ -104,7 +107,8 @@ class DQNetwork:
         # Prepare inputs and targets
         x_train = np.asarray(x_train).squeeze()
         t_train = np.asarray(t_train).squeeze()
-
+        
+        print("Ended computing targets")
         # Train the model for one epoch
         h = self.model.fit(x_train.reshape(tuple([len(x_train)]+list(self.input_shape))),
                            t_train,
